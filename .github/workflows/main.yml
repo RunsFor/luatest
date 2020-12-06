@@ -14,6 +14,7 @@ jobs:
         tarantool_version: ['1.10', '2.3']
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: tarantool-actions/setup-tarantool@main
         with:
           version: ${{ matrix.tarantool_version }}
