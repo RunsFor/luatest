@@ -1,0 +1,28 @@
+name: Main workflow
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  PROJECT_NAME: luatest
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        tarantool_version: ['1.10', '2.3']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tarantool-actions/setup-tarantool@main
+        with:
+          version: ${{ matrix.tarantool_version }}
+          rocks: |
+            http=1.1.0
+            luacheck=0.25.0
+            luacov=0.13.0
+      - run: |
+          tarantoolctl rocks install ldoc --server=http://rocks.moonscript.org
+          sudo apt install tarantool-dev
+      - run: cmake .
+      - run: make lint test_with_coverage_report
